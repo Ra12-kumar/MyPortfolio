@@ -1,16 +1,19 @@
 import { Bell, CalendarCheck, FileText, Search, ShoppingCart, Users, UserCheck, Package, Tag, Clock } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { safeHttpsUrl } from '@/lib/safeUrl';
 
 /**
  * Illustrative, code-drawn UI previews used when no real screenshot exists.
  * Always rendered with a visible "Illustrative preview" label.
  */
 export function ProjectPreview({ project }) {
-  if (project.imageUrl) {
+  const imageUrl = safeHttpsUrl(project.imageUrl);
+  if (imageUrl) {
     return (
       <div className="overflow-hidden rounded-xl border border-white/10 bg-ink-900">
         <img
-          src={project.imageUrl}
+          src={imageUrl}
+          referrerPolicy="no-referrer"
           alt={`${project.title} screenshot`}
           loading="lazy"
           decoding="async"

@@ -12,8 +12,9 @@ export class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error, info) {
-    // Hook point for an error-reporting service (e.g. Sentry).
-    console.error('UI error:', error, info?.componentStack);
+    // Hook point for an error-reporting service (e.g. Sentry). Details are only logged in development
+    // so production consoles never expose component names or error internals.
+    if (import.meta.env.DEV) console.error('UI error:', error, info?.componentStack);
   }
 
   render() {

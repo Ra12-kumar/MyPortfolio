@@ -114,20 +114,21 @@ describe('POST /api/v1/chat', () => {
     expect(res.status).toBe(400);
   });
 
-  it('answers pricing questions without inventing prices (fallback mode)', async () => {
+  it('answers pricing questions from the approved knowledge base (RAG)', async () => {
     const res = await request(app)
       .post('/api/v1/chat')
       .send({ messages: [{ role: 'user', content: 'How much does a website cost?' }] });
     expect(res.status).toBe(200);
-    expect(res.body.data.source).toBe('fallback');
-    expect(res.body.data.reply).not.toMatch(/[$₹]\s?\d/);
+    expect(res.body.data.source).toBe('rag');
+    expect(res.body.data.reply).toContain('₹2,999');
     expect(res.body.data.suggestInquiry).toBe(true);
   });
 
-  it('describes the gym project from approved content', async () => {
+  it('gives the approved direct-contact details', async () => {
     const res = await request(app)
       .post('/api/v1/chat')
-      .send({ messages: [{ role: 'user', content: 'Can you build something for my gym?' }] });
-    expect(res.body.data.reply).toContain('Gym Management System');
+      .send({ messages: [{ role: 'user', content: 'What is your phone number?' }] });
+    expect(res.body.data.reply).toContain('+91 7323891747');
+    expect(res.body.data.reply).toContain('ramsah01012002@gmail.com');
   });
 });

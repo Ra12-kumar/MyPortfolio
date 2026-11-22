@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { ProjectPreview } from '@/components/mockups/ProjectPreview';
 import { GitHubIcon } from '@/components/ui/BrandIcons';
 import { cn } from '@/lib/cn';
+import { safeHttpsUrl } from '@/lib/safeUrl';
 
 const typeForProject = {
   gym: 'Business Management System',
@@ -102,13 +103,13 @@ function ProjectCard({ project: p, index }) {
               <Button onClick={() => openInquiry(typeForProject[p.previewKey] || 'Full-Stack Web Application')}>
                 Build something similar
               </Button>
-              {p.demoUrl && (
-                <Button as="a" href={p.demoUrl} target="_blank" rel="noopener noreferrer" variant="secondary">
+              {safeHttpsUrl(p.demoUrl) && (
+                <Button as="a" href={safeHttpsUrl(p.demoUrl)} target="_blank" rel="noopener noreferrer" variant="secondary">
                   Live demo <ArrowUpRight className="size-4" aria-hidden="true" />
                 </Button>
               )}
-              {p.githubUrl && (
-                <Button as="a" href={p.githubUrl} target="_blank" rel="noopener noreferrer" variant="secondary">
+              {safeHttpsUrl(p.githubUrl) && (
+                <Button as="a" href={safeHttpsUrl(p.githubUrl)} target="_blank" rel="noopener noreferrer" variant="secondary">
                   <GitHubIcon className="size-4" /> Source code
                 </Button>
               )}

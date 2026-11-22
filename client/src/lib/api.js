@@ -34,6 +34,10 @@ export async function api(path, { method = 'GET', body, token, timeout = 15000, 
       headers,
       body: body === undefined ? undefined : isForm ? body : JSON.stringify(body),
       signal: combined,
+      // No cookies are used, and nothing the API returns should be cached or leak a referrer.
+      credentials: 'omit',
+      cache: 'no-store',
+      referrerPolicy: 'no-referrer',
     });
   } catch (err) {
     if (err.name === 'AbortError' && signal?.aborted) throw err;
@@ -54,7 +58,11 @@ export async function api(path, { method = 'GET', body, token, timeout = 15000, 
 
   if (!res.ok) {
     const e = payload?.error || {};
-    throw new ApiError(e.message || `Request failed (${res.status})`, { status: res.status, code: e.code, details: e.details });
+    // Only show server text for expected client-facing outcomes (validation, auth, rate limits, "service not configured").
+    // Unexpected server failures (500/502/504…) get a generic message so internals are never surfaced.
+    const userFacing = res.status < 500 || res.status === 503;
+    const message = userFacing && e.message ? e.message : 'Something went wrong on our side. Please try again later.';
+    throw new ApiError(message, { status: res.status, code: e.code, details: userFacing ? e.details : undefined });
   }
 
   return raw ? payload : (payload?.data ?? payload);

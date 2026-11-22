@@ -5,6 +5,7 @@ import { useAdminQuery } from '../useAdminQuery';
 import { PageHeader, StateMessage } from '../AdminLayout';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/cn';
+import { safeHttpsUrl } from '@/lib/safeUrl';
 
 const slugify = (s) =>
   s
@@ -135,6 +136,7 @@ function EditorModal({ resource, config, item, onClose, onSaved }) {
 
   const upload = async (file) => {
     if (!file) return;
+    if (!['image/png', 'image/jpeg', 'image/webp', 'image/avif'].includes(file.type)) return setError('Only PNG, JPEG, WebP or AVIF images are allowed');
     if (file.size > 5 * 1024 * 1024) return setError('Image must be 5 MB or smaller');
     setUploading(true);
     setError(null);
@@ -251,9 +253,9 @@ function EditorModal({ resource, config, item, onClose, onSaved }) {
                 )}
                 {f.type === 'image' && (
                   <div className="space-y-3">
-                    {values.imageUrl && (
+                    {safeHttpsUrl(values.imageUrl) && (
                       <div className="relative overflow-hidden rounded-xl border border-white/10">
-                        <img src={values.imageUrl} alt="Project screenshot preview" className="max-h-56 w-full object-cover object-top" />
+                        <img src={safeHttpsUrl(values.imageUrl)} referrerPolicy="no-referrer" alt="Project screenshot preview" className="max-h-56 w-full object-cover object-top" />
                         <button
                           type="button"
                           onClick={() => set('imageUrl', null)}

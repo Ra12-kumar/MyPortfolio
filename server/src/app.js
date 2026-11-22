@@ -61,6 +61,11 @@ export function createApp() {
 
   const v1 = express.Router();
   v1.use(apiLimiter);
+  // Never let browsers or proxies cache anything a visitor submits or receives from a POST.
+  v1.use((req, res, next) => {
+    if (req.method !== 'GET') res.set('Cache-Control', 'no-store');
+    next();
+  });
   v1.use(publicRoutes);
   v1.use('/admin', (_req, res, next) => {
     res.set('Cache-Control', 'no-store');

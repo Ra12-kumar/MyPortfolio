@@ -1,10 +1,36 @@
+# Dependencies & build output
 node_modules/
 dist/
 coverage/
+
+# Secrets: API keys, tokens and credentials must never be committed.
+# Keep real values in .env files (ignored) and only commit the empty .env.example templates.
 .env
 .env.*
+**/.env
+**/.env.*
 !.env.example
+!**/.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.jks
+secrets/
+**/secrets/
+credentials.json
+service-account*.json
+*-service-account*.json
+.npmrc
+.supabase/
+
+# Local data (inquiries submitted while Supabase is not configured)
+server/data/
+
+# Logs, OS and tooling files
 *.log
 .DS_Store
+Thumbs.db
 .vercel
-server/data/
+.claude/
