@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Bot, Send, X, MessageCircle, ArrowRight, RotateCcw } from 'lucide-react';
-import { api, apiConfigured } from '@/lib/api';
+import { ragReply } from '@/lib/rag/ragChat';
 import { useInquiry } from '@/context/InquiryContext';
 import { cn } from '@/lib/cn';
 
@@ -67,22 +67,16 @@ export function ChatWidget() {
     setMessages(next);
     setInput('');
 
-    if (!apiConfigured) {
-      setMessages((m) => [
-        ...m,
-        { role: 'assistant', content: 'The AI assistant is offline in this build. Please use the project inquiry form and Ram will respond personally.', suggestInquiry: true },
-      ]);
-      return;
-    }
-
     setPending(true);
     try {
-      // Only send role/content; the welcome message is UI-only.
+      // The assistant runs in the browser over Ram's approved knowledge base — nothing is sent to a server.
+      // Only role/content are used; the welcome message is UI-only.
       const payload = next.slice(1).map(({ role, content: c }) => ({ role, content: c }));
-      const data = await api('/chat', { method: 'POST', body: { messages: payload }, timeout: 30000 });
+      const data = ragReply(payload);
+      await new Promise((resolve) => setTimeout(resolve, 350)); // brief typing indicator
       setMessages((m) => [...m, { role: 'assistant', content: data.reply, suggestInquiry: data.suggestInquiry }]);
-    } catch (err) {
-      setError(err.message || 'The assistant is unavailable right now.');
+    } catch {
+      setError('The assistant is unavailable right now.');
       // Roll back the unanswered message so the user can retry.
       setMessages((m) => m.slice(0, -1));
       setInput(content);

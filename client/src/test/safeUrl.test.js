@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isAllowedApiUrl, isEmail, isPhone, safeHttpsUrl } from '@/lib/safeUrl';
+import { isEmail, isPhone, safeHttpsUrl } from '@/lib/safeUrl';
 
 describe('safeHttpsUrl', () => {
   it('accepts https URLs only', () => {
@@ -9,18 +9,6 @@ describe('safeHttpsUrl', () => {
     expect(safeHttpsUrl('data:text/html,<script>alert(1)</script>')).toBeNull();
     expect(safeHttpsUrl('//evil.example')).toBeNull();
     expect(safeHttpsUrl(undefined)).toBeNull();
-  });
-});
-
-describe('isAllowedApiUrl', () => {
-  it('requires https in production', () => {
-    expect(isAllowedApiUrl('https://api.example.com/api/v1', { production: true })).toBe(true);
-    expect(isAllowedApiUrl('http://api.example.com', { production: true })).toBe(false);
-    expect(isAllowedApiUrl('http://localhost:4000/api/v1', { production: true })).toBe(false);
-  });
-  it('allows http only for localhost in development', () => {
-    expect(isAllowedApiUrl('http://localhost:4000/api/v1', { production: false })).toBe(true);
-    expect(isAllowedApiUrl('http://api.example.com', { production: false })).toBe(false);
   });
 });
 

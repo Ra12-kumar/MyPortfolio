@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import Home from '@/pages/Home';
@@ -7,9 +7,6 @@ import { SiteLayout } from '@/site/layout/SiteLayout';
 import {
   HomePage, AboutPage, ServicesPage, ProjectsPage, ProcessPage, TestimonialsPage, ContactPage,
 } from '@/site/pages/SitePages';
-
-// Admin is code-split so public visitors never download it.
-const AdminApp = lazy(() => import('@/admin/AdminApp'));
 
 function PageLoader() {
   return (
@@ -34,7 +31,6 @@ export default function App() {
         </Route>
         {/* Original single-page version, kept intact. */}
         <Route path="/one-page" element={<Home />} />
-        <Route path="/admin/*" element={<AdminApp />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>

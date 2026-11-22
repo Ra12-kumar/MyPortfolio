@@ -4,13 +4,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { CheckCircle2, AlertTriangle, Send, Mail } from 'lucide-react';
 import { inquiryOptions } from '@shared/content.js';
 import { inquiryDefaults, inquirySchema } from '@/lib/inquirySchema';
-import { api, apiConfigured } from '@/lib/api';
+import { deliverInquiry, mailInquiryLink, whatsappInquiryLink } from '@/lib/inquiryDelivery';
 import { site, whatsappLink } from '@/config/site';
 import { useInquiry } from '@/context/InquiryContext';
 import { Button } from '@/components/ui/Button';
 import { WhatsAppIcon } from '@/components/ui/BrandIcons';
 
 const SUBMITTED_KEY = 'rjk-inquiry-submitted';
+const MIN_FILL_TIME_MS = 3000;
 
 function Field({ id, label, error, required, hint, children }) {
   return (
@@ -32,7 +33,7 @@ function Field({ id, label, error, required, hint, children }) {
 export function InquiryForm() {
   const { prefill } = useInquiry();
   const startedAt = useRef(Date.now());
-  const [status, setStatus] = useState({ state: 'idle' }); // idle | success | error
+  const [status, setStatus] = useState({ state: 'idle' }); // idle | success | handoff | error
   const {
     register,
     handleSubmit,
@@ -57,7 +58,14 @@ export function InquiryForm() {
   const onSubmit = async (values) => {
     setStatus({ state: 'idle' });
 
-    // Client-side duplicate guard (server also de-duplicates for 24h).
+    // Spam guard: a filled honeypot or an impossibly fast submit is silently dropped (bots get no signal).
+    if ((values.website && values.website.trim() !== '') || Date.now() - startedAt.current < MIN_FILL_TIME_MS) {
+      reset(inquiryDefaults);
+      setStatus({ state: 'success' });
+      return;
+    }
+
+    // Client-side duplicate guard.
     const fingerprint = `${values.email}|${values.description}`.toLowerCase();
     try {
       if (sessionStorage.getItem(SUBMITTED_KEY) === fingerprint) {
@@ -68,29 +76,53 @@ export function InquiryForm() {
       /* storage unavailable */
     }
 
+    const result = await deliverInquiry(values);
     try {
-      const res = await api('/inquiries', {
-        method: 'POST',
-        body: { ...values, source: 'website', formStartedAt: startedAt.current },
-        raw: true,
-      });
-      try {
-        sessionStorage.setItem(SUBMITTED_KEY, fingerprint);
-      } catch {
-        /* ignore */
-      }
+      sessionStorage.setItem(SUBMITTED_KEY, fingerprint);
+    } catch {
+      /* ignore */
+    }
+    if (result.mode === 'sent') {
       reset(inquiryDefaults);
-      setStatus({ state: 'success', message: res?.message });
-    } catch (err) {
-      if (err.code === 'DUPLICATE_INQUIRY') {
-        setStatus({ state: 'success', message: err.message });
-        return;
-      }
-      setStatus({ state: 'error', message: err.message || 'Something went wrong. Please try again.' });
+      setStatus({ state: 'success' });
+    } else {
+      // No form service configured (or it was unreachable): hand the visitor a prefilled WhatsApp / e-mail message.
+      setStatus({ state: 'handoff', values });
     }
   };
 
   const wa = whatsappLink();
+
+  if (status.state === 'handoff') {
+    const waLink = whatsappInquiryLink(status.values);
+    const mailLink = mailInquiryLink(status.values);
+    return (
+      <div className="flex min-h-[420px] flex-col items-center justify-center p-8 text-center" role="status">
+        <span className="grid size-14 place-items-center rounded-full bg-brand-500/10 ring-1 ring-brand-400/30">
+          <Send className="size-7 text-brand-300" aria-hidden="true" />
+        </span>
+        <h3 className="mt-6 text-xl font-semibold text-white">One last step</h3>
+        <p className="mt-3 max-w-md leading-relaxed text-slate-400">
+          Your inquiry is ready. Send it to Ram on WhatsApp or by e-mail — the message is already written for you.
+        </p>
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
+          {waLink && (
+            <Button as="a" href={waLink} target="_blank" rel="noopener noreferrer">
+              <WhatsAppIcon className="size-4" /> Send on WhatsApp
+            </Button>
+          )}
+          {mailLink && (
+            <Button as="a" href={mailLink} variant="secondary">
+              <Mail className="size-4" aria-hidden="true" /> Send by e-mail
+            </Button>
+          )}
+          <Button variant="ghost" onClick={() => setStatus({ state: 'idle' })}>
+            Edit inquiry
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   if (status.state === 'success') {
     return (
@@ -226,12 +258,6 @@ export function InquiryForm() {
             )}
           </div>
         </div>
-      )}
-
-      {!apiConfigured && (
-        <p className="mt-6 flex items-center gap-2 text-xs text-amber-200/80">
-          <Mail className="size-3.5" aria-hidden="true" /> The inquiry service is not connected in this build.
-        </p>
       )}
 
       <div className="mt-8 flex flex-col-reverse items-start gap-4 sm:flex-row sm:items-center sm:justify-between">

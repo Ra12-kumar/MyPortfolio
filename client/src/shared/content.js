@@ -2,9 +2,8 @@
  * Centralized portfolio content.
  *
  * This file is the single source of truth for business content. It is used by:
- *  - the frontend (as a fallback when the API is unavailable),
- *  - the backend chatbot knowledge base (the AI may only use what is written here),
- *  - the database seed script (server/scripts/seed.js).
+ *  - the website sections (services, projects, FAQs, process, pricing options),
+ *  - the in-browser assistant context (src/lib/rag has its own approved knowledge base).
  *
  * Contact details are NOT stored here — they come from environment variables.
  * Edit honestly: do not add statistics, clients or claims you cannot verify.

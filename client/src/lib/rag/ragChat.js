@@ -9,15 +9,12 @@
  *
  * When nothing in the knowledge base matches, the assistant says so and hands
  * over to Ram. Project enquiries are collected one question at a time.
- * No database is used and nothing from the chat is stored.
+ * Runs entirely in the browser: no server, no database, nothing from the chat is stored or sent anywhere.
  */
 import { chunks, intake, CONTACT_SHORT, WELCOME } from './knowledge.js';
 import { buildIndex, search, tokenize } from './retriever.js';
 
 const index = buildIndex(chunks);
-
-/** Set CHAT_RAG=off to restore the original (pre-RAG) chat behaviour. */
-export const ragEnabled = () => String(process.env.CHAT_RAG ?? 'on').toLowerCase() !== 'off';
 
 const MAX_INTAKE_QUESTIONS = 4;
 const SUMMARY_PREFIX = "Thanks! Here's what you've shared so far:";
@@ -114,13 +111,8 @@ function nextQuestion(key, messages) {
   return intake[key].questions.find((q) => !used.includes(q)) ?? null;
 }
 
-/**
- * Builds the assistant reply for the conversation, or `null` when RAG mode is
- * switched off (CHAT_RAG=off) so the caller can use its previous behaviour.
- */
+/** Builds the assistant reply for the conversation (the last message must be the visitor's). */
 export function ragReply(messages) {
-  if (!ragEnabled()) return null;
-
   const text = messages[messages.length - 1].content.trim();
   const previous = messages.length > 1 ? messages[messages.length - 2] : null;
 

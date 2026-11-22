@@ -20,7 +20,7 @@ function seoPlugin(siteUrl) {
       return html.replace('<!--seo-urls-->', tags);
     },
     generateBundle() {
-      const robots = ['User-agent: *', 'Allow: /', 'Disallow: /admin', base ? `Sitemap: ${base}/sitemap.xml` : '']
+      const robots = ['User-agent: *', 'Allow: /', base ? `Sitemap: ${base}/sitemap.xml` : '']
         .filter(Boolean)
         .join('\n');
       this.emitFile({ type: 'asset', fileName: 'robots.txt', source: `${robots}\n` });
@@ -43,7 +43,7 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
-        '@shared': fileURLToPath(new URL('../shared', import.meta.url)),
+        '@shared': fileURLToPath(new URL('./src/shared', import.meta.url)),
       },
     },
     server: {

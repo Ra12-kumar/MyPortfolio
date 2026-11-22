@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ragReply } from '../src/services/rag/ragChat.js';
+import { ragReply } from '@/lib/rag/ragChat';
 
 const ask = (...turns) => {
   const messages = [];
@@ -45,14 +45,5 @@ describe('RAG assistant (approved knowledge base only)', () => {
     expect(r.reply).toMatch(/Here's what you've shared so far/);
     expect(r.reply).toMatch(/Scope, timeline and pricing need Ram's review/);
     expect(r.suggestInquiry).toBe(true);
-  });
-
-  it('can be switched off with CHAT_RAG=off', () => {
-    process.env.CHAT_RAG = 'off';
-    try {
-      expect(ragReply([{ role: 'user', content: 'hi' }])).toBeNull();
-    } finally {
-      delete process.env.CHAT_RAG;
-    }
   });
 });
