@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#070b16"/>
+      <stop offset="1" stop-color="#111a2e"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7c9cff"/>
+      <stop offset="1" stop-color="#a78bfa"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.85" cy="0.1" r="0.6">
+      <stop offset="0" stop-color="#5b7cfa" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#5b7cfa" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <text x="80" y="140" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" fill="url(#accent)">RJK · Ram Jatan Kumar Sah</text>
+  <text x="80" y="270" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="700" fill="#ffffff">Turning Business Challenges</text>
+  <text x="80" y="350" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="700" fill="#ffffff">Into Powerful Digital Solutions.</text>
+  <text x="80" y="440" font-family="Arial, Helvetica, sans-serif" font-size="28" fill="#94a0b8">Full-Stack Development · AI Integration · Business Automation</text>
+</svg>
