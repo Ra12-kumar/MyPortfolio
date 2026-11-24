@@ -10,15 +10,16 @@ export const pages = [
     label: 'Home',
     title: 'Ram Jatan Kumar Sah — Full-Stack & AI Solutions Developer',
     description:
-      'Software engineer building end-to-end web applications, business management systems, AI chatbots and automation that reduce manual work and help businesses grow.',
+      'Software engineer building full-stack web applications, business management systems, AI chatbots and automation that reduce manual work.',
     sections: ['home'],
     shape: 'icosahedron',
   },
   {
     path: '/about',
     label: 'About',
-    title: 'About — Ram Jatan Kumar Sah',
-    description: 'A software engineer who understands the business first, then builds technology that delivers practical value.',
+    title: 'About Ram Jatan Kumar Sah — Full-Stack Software Engineer',
+    description:
+      'Full-stack software engineer with 4 years of experience who understands the business first, then builds web apps and AI solutions that deliver value.',
     eyebrow: 'About me',
     heading: 'Your technology partner, from idea to deployment.',
     sections: ['about', 'tech-skills', 'ai-expertise'],
@@ -27,8 +28,9 @@ export const pages = [
   {
     path: '/services',
     label: 'Services',
-    title: 'Services — Websites, Web Apps, AI & Automation',
-    description: 'Custom websites, full-stack applications, business management systems, AI chatbots, API integrations and modernization.',
+    title: 'Services — Websites, Web Apps, AI Chatbots & Automation',
+    description:
+      'Custom websites, full-stack web applications, business management systems, AI chatbots, API integrations and process automation for growing businesses.',
     eyebrow: 'Services',
     heading: 'Solutions shaped around how your business works.',
     sections: ['services', 'ai'],
@@ -37,8 +39,9 @@ export const pages = [
   {
     path: '/projects',
     label: 'Projects',
-    title: 'Projects — Gym, Consultancy & Wholesale Solutions',
-    description: 'Business management systems and e-commerce solutions built around real operational requirements.',
+    title: 'Projects — Gym, Consultancy & Wholesale Business Systems',
+    description:
+      'Business management systems and e-commerce solutions built around real operational requirements: gym, consultancy and general/wholesale shop projects.',
     eyebrow: 'Projects',
     heading: 'Real business problems. Working solutions.',
     sections: ['projects'],
@@ -47,8 +50,9 @@ export const pages = [
   {
     path: '/process',
     label: 'Process',
-    title: 'Development Process — Ram Jatan Kumar Sah',
-    description: 'A clear seven-step process from discovery and requirements to deployment and support.',
+    title: 'Development Process — From Discovery to Deployment',
+    description:
+      'A clear seven-step process: discovery, requirements, architecture, UI/UX design, development, testing and deployment, then ongoing support and improvements.',
     eyebrow: 'Process',
     heading: 'Seven clear steps from idea to launch.',
     sections: ['process'],
@@ -58,7 +62,8 @@ export const pages = [
     path: '/testimonials',
     label: 'Testimonials',
     title: 'Client Feedback & Proof of Work — Ram Jatan Kumar Sah',
-    description: 'Verified client feedback and the real business requirements behind each project.',
+    description:
+      'Verified client feedback and the real business requirements behind each project, presented honestly with no invented reviews or statistics.',
     eyebrow: 'Proof of work',
     heading: 'Built around real business requirements.',
     sections: ['testimonials'],
@@ -67,8 +72,9 @@ export const pages = [
   {
     path: '/contact',
     label: 'Contact',
-    title: "Contact — Let's Discuss Your Project",
-    description: 'Tell me about your business challenge, website requirement or automation idea. Free initial consultation.',
+    title: "Contact — Discuss Your Project | Ram Jatan Kumar Sah",
+    description:
+      'Tell me about your website, web app, AI chatbot or automation idea. Free initial consultation via the inquiry form, WhatsApp or email.',
     eyebrow: 'Contact',
     heading: "Have an idea? Let's build something powerful.",
     sections: ['contact', 'contact-form', 'faq'],

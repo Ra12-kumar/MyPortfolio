@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Check } from 'lucide-react';
 import { hero, profile } from '@shared/content.js';
@@ -63,7 +64,7 @@ export function Hero() {
             <Button size="lg" onClick={() => openInquiry()}>
               Start Your Project <ArrowRight className="size-4" aria-hidden="true" />
             </Button>
-            <Button as="a" href="#projects" size="lg" variant="secondary">
+            <Button as={Link} to="/projects" size="lg" variant="secondary">
               Explore My Work
             </Button>
           </motion.div>

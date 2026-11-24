@@ -50,6 +50,12 @@ All are optional: contact details fall back to the defaults in `client/src/confi
 ### Receiving inquiries by e-mail (recommended)
 Create a free form on [Formspree](https://formspree.io) or [Web3Forms](https://web3forms.com), set `VITE_FORM_ENDPOINT` (and `VITE_FORM_ACCESS_KEY` for Web3Forms). The CSP in `vercel.json` already allows both. For another provider, add its origin to `connect-src`.
 
+## SEO
+- Per-page title, description, canonical, Open Graph, Twitter tags and JSON-LD come from `client/src/site/routes.js` + `client/src/site/seo.js`.
+- At build time `vite.config.js` writes route-specific HTML (`about/index.html`, …) so crawlers and link-preview bots see correct tags without running JavaScript, plus `404.html` (noindex) so unknown URLs return a real 404, `sitemap.xml` and `robots.txt`.
+- To change a page's SEO text, edit `routes.js` and redeploy; keep titles ≤ 60 and descriptions ≤ 160 characters.
+- Google Search Console file: `client/public/google5d45381b009d8800.html`.
+
 ## Security notes
 - The Content-Security-Policy only allows scripts from the site itself and connections to the form services listed above.
 - Every URL rendered into a link or image must be `https://` (`client/src/lib/safeUrl.js`); env-provided contact values are format-checked.

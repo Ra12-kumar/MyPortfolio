@@ -6,7 +6,7 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
-      "source": "/((?!assets/|favicon.svg|og-image.svg|og-image.png|robots.txt|sitemap.xml|google5d45381b009d8800.html).*)",
+      "source": "/(about|services|projects|process|testimonials|contact|one-page)",
       "destination": "/index.html"
     }
   ],

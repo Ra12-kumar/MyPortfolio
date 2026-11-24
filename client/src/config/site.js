@@ -4,19 +4,11 @@
  * contact details are never invented.
  */
 import { isEmail, isPhone, safeHttpsUrl } from '@/lib/safeUrl';
+import { DEFAULTS } from '@/config/contactDefaults';
 
 const read = (key) => {
   const value = import.meta.env[key];
   return typeof value === 'string' && value.trim() !== '' ? value.trim() : null;
-};
-
-// Public contact details of the site owner. They are used when the matching VITE_* variable is not set at build
-// time (e.g. a fresh Vercel project), so the live site never ships without a way to reach Ram.
-const DEFAULTS = {
-  email: 'ramsah01012002@gmail.com',
-  phone: '+91 7323891747',
-  whatsapp: '917323891747',
-  availability: 'Open for Freelance Projects & Collaboration',
 };
 
 const whatsappNumber = (read('VITE_WHATSAPP_NUMBER') ?? DEFAULTS.whatsapp).replace(/[^\d]/g, '') || null;

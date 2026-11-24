@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom';
 import { Mail, Phone } from 'lucide-react';
+import { routeForSection } from '@/site/routes';
 import { profile } from '@shared/content.js';
 import { navItems, site, whatsappLink } from '@/config/site';
 import { useContent } from '@/hooks/useContent';
@@ -51,19 +53,19 @@ export function Footer() {
 
         <FooterCol title="Navigation" className="lg:col-span-2">
           {navItems.map((n) => (
-            <FooterLink key={n.id} href={`#${n.id}`}>{n.label}</FooterLink>
+            <FooterLink key={n.id} to={routeForSection[n.id] || '/'}>{n.label}</FooterLink>
           ))}
         </FooterCol>
 
         <FooterCol title="Services" className="lg:col-span-3">
           {services.slice(0, 7).map((s) => (
-            <FooterLink key={s.slug} href="#services">{s.title}</FooterLink>
+            <FooterLink key={s.slug} to="/services">{s.title}</FooterLink>
           ))}
         </FooterCol>
 
         <FooterCol title="Projects & Contact" className="lg:col-span-3">
           {projects.map((p) => (
-            <FooterLink key={p.slug} href="#projects">{p.title}</FooterLink>
+            <FooterLink key={p.slug} to="/projects">{p.title}</FooterLink>
           ))}
           {site.contact.email && (
             <li className="pt-3">
@@ -100,12 +102,12 @@ function FooterCol({ title, children, className }) {
   );
 }
 
-function FooterLink({ href, children }) {
+function FooterLink({ to, children }) {
   return (
     <li>
-      <a href={href} className="text-sm text-slate-400 transition hover:text-white">
+      <Link to={to} className="text-sm text-slate-400 transition hover:text-white">
         {children}
-      </a>
+      </Link>
     </li>
   );
 }
