@@ -30,6 +30,9 @@ npm run build                # production build → client/dist
 
 ## Environment variables (`client/.env.local`, all public)
 
+All are optional: contact details fall back to the defaults in `client/src/config/site.js`, and on Vercel the site URL falls back to the project's production domain (`VERCEL_PROJECT_PRODUCTION_URL`) for canonical/OG tags and the sitemap.
+
+
 | Variable | Purpose |
 |---|---|
 | `VITE_SITE_URL` | Public site URL — canonical/OG tags, sitemap.xml, robots.txt |

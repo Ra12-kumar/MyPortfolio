@@ -15,7 +15,7 @@ function seoPlugin(siteUrl) {
     name: 'portfolio-seo',
     transformIndexHtml(html) {
       const tags = base
-        ? `<link rel="canonical" href="${base}/" />\n    <meta property="og:url" content="${base}/" />\n    <meta property="og:image" content="${base}/og-image.svg" />\n    <meta name="twitter:image" content="${base}/og-image.svg" />`
+        ? `<link rel="canonical" href="${base}/" />\n    <meta property="og:url" content="${base}/" />\n    <meta property="og:image" content="${base}/og-image.png" />\n    <meta property="og:image:width" content="1200" />\n    <meta property="og:image:height" content="630" />\n    <meta name="twitter:image" content="${base}/og-image.png" />`
         : '';
       return html.replace('<!--seo-urls-->', tags);
     },
@@ -26,10 +26,14 @@ function seoPlugin(siteUrl) {
       this.emitFile({ type: 'asset', fileName: 'robots.txt', source: `${robots}\n` });
       if (base) {
         const today = new Date().toISOString().slice(0, 10);
+        const routes = [['/', '1.0'], ['/about', '0.8'], ['/services', '0.9'], ['/projects', '0.8'], ['/process', '0.6'], ['/testimonials', '0.6'], ['/contact', '0.9']];
+        const urls = routes
+          .map(([route, priority]) => `  <url><loc>${base}${route}</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>${priority}</priority></url>`)
+          .join('\n');
         this.emitFile({
           type: 'asset',
           fileName: 'sitemap.xml',
-          source: `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>${base}/</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>1.0</priority></url>\n</urlset>\n`,
+          source: `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`,
         });
       }
     },
@@ -38,8 +42,11 @@ function seoPlugin(siteUrl) {
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_');
+  // On Vercel, fall back to the project's production domain so canonical/OG tags and the sitemap work without extra setup.
+  const vercelHost = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  const siteUrl = env.VITE_SITE_URL || (vercelHost ? `https://${vercelHost}` : '');
   return {
-    plugins: [react(), tailwindcss(), seoPlugin(env.VITE_SITE_URL)],
+    plugins: [react(), tailwindcss(), seoPlugin(siteUrl)],
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
